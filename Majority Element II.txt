@@ -1,0 +1,55 @@
+/*
+There can be at most k - 1 major element in an array if the major element appears more than [n / k] times.
+
+In the begining, we assume there are k - 1 candidates:
+These candidates can take any value;
+The vote of these candidates must be 0
+Then we traverse the array:
+
+If current element equals to the value of any candidate, the candidate get a vote; (one voter can only vote for one candidate)
+If the vote of any candidate is 0, then current element is set as a new candidate and he can get a vote immediately; (A voter can also be elected)
+Otherwise, current element vote against all candidates and all candidates lose a vote.
+*/
+
+// Boyer-Moore vote
+
+class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+        List<Integer> res=new ArrayList<>();
+        if(nums.length==1)
+        {
+            res.add(nums[0]);
+            return res;
+        }
+
+        int c1=nums[0],c2=nums[0],v1=0,v2=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(c1==nums[i]) v1++;
+            else if(c2==nums[i]) v2++;
+            else if(v1==0) {
+                c1=nums[i];
+                v1++;
+            }
+            else if(v2==0) {
+                c2=nums[i];
+                v2++;
+            }
+            else
+            {
+                v1--;
+                v2--;
+            }
+        }
+        v1=0;v2=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(c1==nums[i]) v1++;
+            else if(c2==nums[i]) v2++;
+        }
+        if(v1>(nums.length/3)) res.add(c1);
+        if(v2>(nums.length/3)) res.add(c2);
+        
+        return res;
+    }
+}
